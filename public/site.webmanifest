@@ -1,0 +1,16 @@
+{
+  "name": "Ionic Post",
+  "short_name": "IonicPost",
+  "description": "Modern post production house",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7c5cfc",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
