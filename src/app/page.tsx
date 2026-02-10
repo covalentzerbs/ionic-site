@@ -1,3 +1,5 @@
+import Landing from "./components/Landing";
+
 export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -15,16 +17,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="flex min-h-svh items-center justify-center bg-white px-6">
-        <div className="text-center">
-          <h1 className="text-[clamp(3rem,10vw,7rem)] font-bold leading-[1.1] tracking-tight text-ionic-purple">
-            ionicpost.co
-          </h1>
-          <p className="mt-4 text-lg font-semibold tracking-tight text-foreground sm:text-xl">
-            coming soon.
-          </p>
-        </div>
-      </main>
+      <Landing />
     </>
   );
 }
