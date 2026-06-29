@@ -81,10 +81,9 @@
             border-radius: 50%;
             background: var(--white);
             pointer-events: none;
-            z-index: 99999;
+            z-index: 10001;
             mix-blend-mode: difference;
-            left: 0; top: 0;
-            will-change: transform;
+            transform: translate(-50%, -50%);
         }
         @media (pointer: coarse) { .cursor { display: none; } }
 
@@ -140,27 +139,20 @@
 
         /* ===== Hero ===== */
         .hero-section {
-            position: relative; width: 100vw; height: 100vh; height: 100dvh;
+            position: relative; width: 100vw; height: 62vh; min-height: 360px;
             display: flex; align-items: center; justify-content: center;
             overflow: hidden; background: var(--white);
-        }
-        .hero-video {
-            position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-        }
-        .hero-video iframe {
-            position: absolute; top: 50%; left: 50%;
-            width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.78vh;
-            transform: translate(-50%, -50%); border: 0;
         }
         .hero-wordmark {
             position: relative; z-index: 2; width: 37.5vw; max-width: 350px; height: auto;
             user-select: none; -webkit-user-drag: none; pointer-events: none;
         }
         .scroll-cue {
-            position: absolute; bottom: 2.2rem; left: 50%; transform: translateX(-50%);
-            z-index: 2; font-size: 0.7rem; letter-spacing: 0.04em; color: rgba(255,255,255,0.85);
+            position: absolute; bottom: 1.6rem; left: 50%; transform: translateX(-50%);
+            z-index: 2; font-size: 0.7rem; letter-spacing: 0.04em; color: var(--gray);
             text-transform: lowercase; opacity: 0.85; animation: cueBob 2.4s ease-in-out infinite;
         }
+        body.dark-mode .hero-section { background: var(--space-dark); }
         @keyframes cueBob { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
 
         /* ===== Work grid ===== */
@@ -170,8 +162,8 @@
             color: var(--gray); margin-bottom: 2.2rem; padding-left: 0.2rem;
         }
         .work-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4vw;
-            max-width: 1500px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1vw;
+            max-width: 1600px; margin: 0 auto;
         }
         .work-card {
             position: relative; aspect-ratio: 16 / 9; overflow: hidden;
@@ -286,18 +278,14 @@
         </svg>
     </a>
 
-    <!-- Hero: landing reel + wordmark -->
+    <!-- Hero: wordmark only (no reel) -->
     <section class="hero-section" id="hero">
-        <div class="hero-video">
-            <iframe src="https://player.vimeo.com/video/1170378022?h=1bb1658087&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&controls=0&background=1&dnt=1&quality=1080p" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-        </div>
         <img src="/assets/logos/brand/ionicpost.png" width="1332" height="396" class="hero-wordmark" alt="Ionic Post">
         <span class="scroll-cue">scroll</span>
     </section>
 
-    <!-- Work: all projects as video players -->
+    <!-- Work: 3-wide grid of projects -->
     <section class="work-section">
-        <p class="work-eyebrow">selected work</p>
         <div class="work-grid" id="workGrid"></div>
     </section>
 
@@ -328,7 +316,9 @@
         { client: "arc'teryx",      title: 'a city to summit', vimeo: '1141586908', thumbnail: 'https://i.vimeocdn.com/video/2089031096-1db55212ce8d60b1ffaa49c54beb793e20934cb93e7df1fd0e2ac6ee80619aeb-d_1280x720' },
         { client: 'pinch',          title: 'a holiday campaign', vimeo: '1140543709', thumbnail: 'https://i.vimeocdn.com/video/2089993227-e000ed9b7ef428ebf6588769ae040780042629649a7118b7c81199783dabe96a-d_1280x720' },
         { client: 'fare',           title: 'beyond the bowl', vimeo: '1175563835', thumbnail: 'https://i.vimeocdn.com/video/2136430771-f53c21717a7bbd356033553598ee8ab44587fc7bfb1f902567c96ef2ccf98eb5-d_1280x720' },
-        { client: 'world of hyatt', title: 'jess pegula × us open', vimeo: '1149097153', thumbnail: 'https://i.vimeocdn.com/video/2099561094-be2875973c8819d32c4faae7afab7681cb8564188b1271444c1a43dabb5315d5-d_1280x720' }
+        { client: 'world of hyatt', title: 'jess pegula × us open', vimeo: '1149097153', thumbnail: 'https://i.vimeocdn.com/video/2099561094-be2875973c8819d32c4faae7afab7681cb8564188b1271444c1a43dabb5315d5-d_1280x720' },
+        { client: 'aesop',          title: 'skin', vimeo: '1167988129', thumbnail: 'https://i.vimeocdn.com/video/2126179638-f6c354c75518a1be78a136a9d2531222a8d363f2f1dec81d60727825d123bc01-d_1280' },
+        { client: 'ever',           title: 'here to be great', vimeo: '1141278566', thumbnail: 'https://i.vimeocdn.com/video/2099560891-36e638960a316e25a52fbf66821647feab77b29c0a3930becefced787395728d-d_1280' }
     ];
 
     const grid = document.getElementById('workGrid');
@@ -395,14 +385,16 @@
         if (e.key === 'Escape') { menuToggle.classList.remove('active'); menuOverlay.classList.remove('active'); }
     });
 
-    // ===== Custom cursor =====
+    // ===== Custom cursor (matches Covalent: 0.35 lerp, left/top centered) =====
     const cursor = document.getElementById('cursor');
-    let mx = 0, my = 0, cx = 0, cy = 0;
-    document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
-    (function loop() {
-        cx += (mx - cx) * 0.5; cy += (my - cy) * 0.5;
-        cursor.style.transform = 'translate(' + (cx - 5) + 'px,' + (cy - 5) + 'px)';
-        requestAnimationFrame(loop);
+    let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+    document.addEventListener('mousemove', function(e) { mouseX = e.clientX; mouseY = e.clientY; });
+    (function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.35;
+        cursorY += (mouseY - cursorY) * 0.35;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        requestAnimationFrame(animateCursor);
     })();
 
     // ===== Dark mode =====
