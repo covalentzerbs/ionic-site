@@ -185,15 +185,24 @@
             width: 100%; height: 56.25vw; min-height: 100%; min-width: 177.78%;
             transform: translate(-50%, -50%); border: 0; z-index: 2;
             opacity: 0; transition: opacity 0.6s ease;
+            pointer-events: none; /* let the custom cursor keep tracking over the player */
         }
         .work-card.playing iframe { opacity: 1; }
-        .work-card .card-label {
-            position: absolute; left: 1rem; bottom: 0.9rem; z-index: 3;
-            font-size: 0.85rem; font-weight: 500; letter-spacing: -0.03em; text-transform: lowercase;
-            color: #fff; text-shadow: 0 1px 12px rgba(0,0,0,0.55);
-            opacity: 0; transform: translateY(6px); transition: all 0.4s ease;
+        .work-card .card-scrim {
+            position: absolute; inset: 0; z-index: 2; pointer-events: none;
+            background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 55%);
+            opacity: 0; transition: opacity 0.3s ease;
         }
-        .work-card:hover .card-label, .work-card.playing .card-label { opacity: 0.95; transform: translateY(0); }
+        .work-card:hover .card-scrim, .work-card.playing .card-scrim { opacity: 1; }
+        .work-card .card-label {
+            position: absolute; left: 1.5rem; bottom: 1.4rem; z-index: 3;
+            font-size: clamp(1.05rem, 2.1vw, 1.5rem); font-weight: 400; letter-spacing: -0.04em;
+            line-height: 1.05; text-transform: lowercase; color: var(--white);
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .work-card:hover .card-label, .work-card.playing .card-label { opacity: 1; }
+        body.dark-mode .work-card .card-label { color: var(--purple); -webkit-text-fill-color: var(--purple); }
+        @media (max-width: 768px) { .work-card .card-label { left: 1rem; bottom: 1rem; } }
         @media (max-width: 768px) {
             .work-grid { grid-template-columns: 1fr; gap: 3vw; }
             .work-section { padding: 6vh 5vw 10vh; }
@@ -323,6 +332,7 @@
         card.dataset.hash = p.hash || '';
         card.innerHTML =
             '<img class="card-thumb" src="' + p.thumbnail + '" width="1280" height="720" alt="' + p.client + '" loading="lazy">' +
+            '<div class="card-scrim"></div>' +
             '<span class="card-label">' + p.client + '</span>';
         grid.appendChild(card);
     });
