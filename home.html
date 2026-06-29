@@ -194,15 +194,22 @@
             opacity: 0; transition: opacity 0.3s ease;
         }
         .work-card:hover .card-scrim, .work-card.playing .card-scrim { opacity: 1; }
-        .work-card .card-label {
+        .work-card .card-text {
             position: absolute; left: 1.5rem; bottom: 1.4rem; z-index: 3;
-            font-size: clamp(1.05rem, 2.1vw, 1.5rem); font-weight: 400; letter-spacing: -0.04em;
-            line-height: 1.05; text-transform: lowercase; color: var(--white);
             opacity: 0; transition: opacity 0.3s ease;
         }
-        .work-card:hover .card-label, .work-card.playing .card-label { opacity: 1; }
-        body.dark-mode .work-card .card-label { color: var(--purple); -webkit-text-fill-color: var(--purple); }
-        @media (max-width: 768px) { .work-card .card-label { left: 1rem; bottom: 1rem; } }
+        .work-card:hover .card-text, .work-card.playing .card-text { opacity: 1; }
+        .work-card .card-client {
+            font-size: clamp(1.05rem, 2.1vw, 1.5rem); font-weight: 400; letter-spacing: -0.04em;
+            line-height: 1.05; text-transform: lowercase; color: var(--white); margin-bottom: 0.25rem;
+        }
+        .work-card .card-title {
+            font-size: 0.65rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+            color: rgba(255,255,255,0.55); line-height: 1.1;
+        }
+        body.dark-mode .work-card .card-client,
+        body.dark-mode .work-card .card-title { color: var(--purple); -webkit-text-fill-color: var(--purple); }
+        @media (max-width: 768px) { .work-card .card-text { left: 1rem; bottom: 1rem; } }
         @media (max-width: 768px) {
             .work-grid { grid-template-columns: 1fr; gap: 3vw; }
             .work-section { padding: 6vh 5vw 10vh; }
@@ -275,7 +282,7 @@
     <!-- Top-left logomark -->
     <a href="/" class="logo-bottom" data-cursor="home" aria-label="Ionic Post home">
         <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#0A0A0A" d="M80 18 a22 22 0 1 0 0 44 a22 22 0 1 0 0 -44 z"/><path fill="#0A0A0A" d="M63 72 h34 v78 h-34 z"/>
+            <path fill="#7c5cfc" d="M80 18 a22 22 0 1 0 0 44 a22 22 0 1 0 0 -44 z"/><path fill="#7c5cfc" d="M63 72 h34 v78 h-34 z"/>
         </svg>
     </a>
 
@@ -314,14 +321,14 @@
     <script>
     // ===== Projects (Jacob Frost's reel — placeholder until per-client reels land) =====
     const PROJECTS = [
-        { client: 'archer money',   vimeo: '1200282915', hash: 'ffeabc1665', thumbnail: 'https://i.vimeocdn.com/video/2167332209-2e6e17f30b93c08b842d27b71c059107ec92ba441d1f37f630c59ddbab7e6362-d_1280x720' },
-        { client: 'onco optima',    vimeo: '1184586128', thumbnail: 'https://i.vimeocdn.com/video/2147773004-bfe04ac45210e7486d3ec60c04f84db2026c53fd35be3f9319ab3f4f770a5d61-d_1280x720' },
-        { client: 'wabi',           vimeo: '1161268499', thumbnail: 'https://i.vimeocdn.com/video/2116569980-827a4c9a901fdcce2c94ba3cec07bb31cda14e49b9fc66e30805132417bf6713-d_1280x720' },
-        { client: 'pocket',         vimeo: '1170047221', hash: '6ac82c19db', thumbnail: 'https://i.vimeocdn.com/video/2129030620-e34b7e0c8001f6efcbcb482157f38106e4e2d3c1037a7a1a0a6c7c923f294342-d_1280x720' },
-        { client: "arc'teryx",      vimeo: '1141586908', thumbnail: 'https://i.vimeocdn.com/video/2089031096-1db55212ce8d60b1ffaa49c54beb793e20934cb93e7df1fd0e2ac6ee80619aeb-d_1280x720' },
-        { client: 'pinch',          vimeo: '1140543709', thumbnail: 'https://i.vimeocdn.com/video/2089993227-e000ed9b7ef428ebf6588769ae040780042629649a7118b7c81199783dabe96a-d_1280x720' },
-        { client: 'fare',           vimeo: '1175563835', thumbnail: 'https://i.vimeocdn.com/video/2136430771-f53c21717a7bbd356033553598ee8ab44587fc7bfb1f902567c96ef2ccf98eb5-d_1280x720' },
-        { client: 'world of hyatt', vimeo: '1149097153', thumbnail: 'https://i.vimeocdn.com/video/2099561094-be2875973c8819d32c4faae7afab7681cb8564188b1271444c1a43dabb5315d5-d_1280x720' }
+        { client: 'archer money',   title: "here's your f**king money!", vimeo: '1200282915', hash: 'ffeabc1665', thumbnail: 'https://i.vimeocdn.com/video/2167332209-2e6e17f30b93c08b842d27b71c059107ec92ba441d1f37f630c59ddbab7e6362-d_1280x720' },
+        { client: 'onco optima',    title: 'refuse to leave it to chance', vimeo: '1184586128', thumbnail: 'https://i.vimeocdn.com/video/2147773004-bfe04ac45210e7486d3ec60c04f84db2026c53fd35be3f9319ab3f4f770a5d61-d_1280x720' },
+        { client: 'wabi',           title: 'when did we stop playing', vimeo: '1161268499', thumbnail: 'https://i.vimeocdn.com/video/2116569980-827a4c9a901fdcce2c94ba3cec07bb31cda14e49b9fc66e30805132417bf6713-d_1280x720' },
+        { client: 'pocket',         title: 'launch', vimeo: '1170047221', hash: '6ac82c19db', thumbnail: 'https://i.vimeocdn.com/video/2129030620-e34b7e0c8001f6efcbcb482157f38106e4e2d3c1037a7a1a0a6c7c923f294342-d_1280x720' },
+        { client: "arc'teryx",      title: 'a city to summit', vimeo: '1141586908', thumbnail: 'https://i.vimeocdn.com/video/2089031096-1db55212ce8d60b1ffaa49c54beb793e20934cb93e7df1fd0e2ac6ee80619aeb-d_1280x720' },
+        { client: 'pinch',          title: 'a holiday campaign', vimeo: '1140543709', thumbnail: 'https://i.vimeocdn.com/video/2089993227-e000ed9b7ef428ebf6588769ae040780042629649a7118b7c81199783dabe96a-d_1280x720' },
+        { client: 'fare',           title: 'beyond the bowl', vimeo: '1175563835', thumbnail: 'https://i.vimeocdn.com/video/2136430771-f53c21717a7bbd356033553598ee8ab44587fc7bfb1f902567c96ef2ccf98eb5-d_1280x720' },
+        { client: 'world of hyatt', title: 'jess pegula × us open', vimeo: '1149097153', thumbnail: 'https://i.vimeocdn.com/video/2099561094-be2875973c8819d32c4faae7afab7681cb8564188b1271444c1a43dabb5315d5-d_1280x720' }
     ];
 
     const grid = document.getElementById('workGrid');
@@ -333,7 +340,8 @@
         card.innerHTML =
             '<img class="card-thumb" src="' + p.thumbnail + '" width="1280" height="720" alt="' + p.client + '" loading="lazy">' +
             '<div class="card-scrim"></div>' +
-            '<span class="card-label">' + p.client + '</span>';
+            '<div class="card-text"><p class="card-client">' + p.client + '</p>' +
+            (p.title ? '<p class="card-title">' + p.title + '</p>' : '') + '</div>';
         grid.appendChild(card);
     });
 
