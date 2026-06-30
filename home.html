@@ -327,13 +327,14 @@
         { client: 'fare',           title: 'beyond the bowl', vimeo: '1175563835', va: 1.778, zoom: 1,   thumbnail: 'https://i.vimeocdn.com/video/2136430771-f53c21717a7bbd356033553598ee8ab44587fc7bfb1f902567c96ef2ccf98eb5-d_1280x720' },
         { client: 'world of hyatt', title: 'jess pegula × us open', vimeo: '1149097153', va: 1, zoom: 1, fill: true, thumbnail: 'https://i.vimeocdn.com/video/2099561094-be2875973c8819d32c4faae7afab7681cb8564188b1271444c1a43dabb5315d5-d_1280x720' },
         { client: 'aesop',          title: 'skin', vimeo: '1167988129', va: 1.5, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2126179638-f6c354c75518a1be78a136a9d2531222a8d363f2f1dec81d60727825d123bc01-d_1280' },
-        { client: 'ever',           title: 'here to be great', vimeo: '1141278566', va: 1.433, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2099560891-36e638960a316e25a52fbf66821647feab77b29c0a3930becefced787395728d-d_1280' }
+        { client: 'ever',           title: 'here to be great', vimeo: '1141278566', va: 1.433, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2099560891-36e638960a316e25a52fbf66821647feab77b29c0a3930becefced787395728d-d_1280' },
+        { client: 'bo house',       title: 'villa peninsula', vimeo: '1205559620', va: 1.433, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2174174962-87f9a5a012a9bd00951a8b149e0debeb596bad2f3b43d4ebab238312fe4bf2c9-d_1280x720' }
     ];
 
     const grid = document.getElementById('workGrid');
-    // Lay 10 projects into a 3x4 frame; the two empty cells sit either side of the
-    // bottom tile so the last row reads as a centred capstone. Hidden on mobile.
-    const SPACER_AT = { 9: true, 11: true };
+    // 11 projects in the 3x4 frame (one empty cell, bottom-right). When a 12th
+    // reel lands it fills automatically. Spacers hidden on mobile.
+    const SPACER_AT = {};
     let pi = 0;
     for (let i = 0; i < 12; i++) {
         if (SPACER_AT[i]) {
