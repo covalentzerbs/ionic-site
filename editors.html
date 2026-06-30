@@ -379,7 +379,7 @@
             color: var(--white);
             /* No transition on base — hover-off snaps instantly, no white flash */
             transition: none;
-            opacity: 0.35;
+            opacity: 0.65;
             letter-spacing: -0.07em;
             text-transform: lowercase;
         }
@@ -601,10 +601,10 @@
             -webkit-text-fill-color: #7c5cfc;
         }
 
-        /* Dark mode: hover deepens to a darker orange instead of turning blue. */
+        /* Dark mode: hover deepens to a darker purple. */
         body.dark-mode .director-row:hover .director-name {
-            color: #C2410C !important;
-            -webkit-text-fill-color: #C2410C !important;
+            color: #6d28d9 !important;
+            -webkit-text-fill-color: #6d28d9 !important;
         }
 
         body.dark-mode .director-credit {
@@ -790,7 +790,7 @@
                 <div class="director-row" data-director="jacob" data-vimeo="1170741864">
                     <span class="director-name">Jacob Frost</span>
                 </div>
-                <div class="director-row no-video" data-director="jude">
+                <div class="director-row" data-director="jude" data-vimeo="1205656125">
                     <span class="director-name">Jude Gabriel Nelson</span>
                 </div>
             </div>
@@ -837,7 +837,7 @@
         // Editors data
         const directors = [
             { id: 'jacob',    slug: 'jacob-frost',          name: 'Jacob Frost',         vimeo: '1170741864', zoom: 'slight',    thumbnail: 'https://i.vimeocdn.com/video/2129989125-7bcea3f611dc90b29683cb79b07503543d01abd6db34091368cc53005941e0e5-d_1280x720' },
-            { id: 'jude',     slug: 'jude-gabriel-nelson',  name: 'Jude Gabriel Nelson', vimeo: '',           thumbnail: '' }
+            { id: 'jude',     slug: 'jude-gabriel-nelson',  name: 'Jude Gabriel Nelson', vimeo: '1205656125', thumbnail: 'https://i.vimeocdn.com/video/2174299129-d1d679767ddd2f9680146440e930784ffd0c3404851d06e85c767085329876b5-d_1280x720' }
         ];
 
         const videoWrapper = document.getElementById('videoWrapper');
