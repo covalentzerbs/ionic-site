@@ -1133,7 +1133,7 @@
             .about-page .manifesto-sticky {
                 position: static;
                 height: auto;
-                padding: 60px 24px 80px;
+                padding: 60px 24px 120px;
                 overflow: visible;
             }
             .about-page .manifesto-inner { transform: none !important; }
@@ -1570,8 +1570,13 @@ Call us old fashioned, or call us luxury. It's up for interpretation.</p>
                 if (isMobile()) {
                     inner.style.transform = '';
                     // Mobile flows naturally (no pin) — light each word as it scrolls
-                    // up past ~70% of the viewport, so the reveal happens on mobile too.
-                    const line = window.innerHeight * 0.7;
+                    // up past ~70% of the viewport. In the final stretch of the page the
+                    // last lines can't scroll that high, so ease the line down toward the
+                    // bottom as we approach it, letting the tail light up fully.
+                    const vh = window.innerHeight;
+                    const remaining = document.documentElement.scrollHeight - (window.scrollY + vh);
+                    const boost = Math.max(0, (vh * 0.32) - Math.max(0, remaining));
+                    const line = Math.min(vh * 0.98, vh * 0.7 + boost);
                     for (let i = 0; i < total; i++) {
                         const lit = words[i].getBoundingClientRect().top < line;
                         words[i].classList.toggle('lit', lit);
