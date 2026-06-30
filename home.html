@@ -162,22 +162,34 @@
         .work-card .card-thumb {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
         }
-        .work-card iframe {
+        /* Blurred footage filling the side bars (square videos like hyatt) */
+        .work-card .card-fill {
             position: absolute; top: 50%; left: 50%;
-            width: 100%; height: 56.25vw; min-height: 100%; min-width: 177.78%;
-            transform: translate(-50%, -50%); border: 0; z-index: 2;
+            width: 100%; height: 177.78%;
+            transform: translate(-50%, -50%) scale(1.18);
+            border: 0; z-index: 2; pointer-events: none;
+            filter: blur(22px) brightness(0.82);
+            opacity: 0; transition: opacity 0.6s ease;
+        }
+        /* Main player — sized to the video's native aspect so it isn't over-cropped,
+           then scaled by --zoom to fill the 16:9 tile (square videos stay letterboxed). */
+        .work-card .card-vid {
+            position: absolute; top: 50%; left: 50%;
+            height: 100%; width: calc(var(--va, 1.778) * 56.25%);
+            transform: translate(-50%, -50%) scale(var(--zoom, 1));
+            border: 0; z-index: 3;
             opacity: 0; transition: opacity 0.6s ease;
             pointer-events: none; /* let the custom cursor keep tracking over the player */
         }
-        .work-card.playing iframe { opacity: 1; }
+        .work-card.playing .card-vid, .work-card.playing .card-fill { opacity: 1; }
         .work-card .card-scrim {
-            position: absolute; inset: 0; z-index: 2; pointer-events: none;
+            position: absolute; inset: 0; z-index: 4; pointer-events: none;
             background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 55%);
             opacity: 0; transition: opacity 0.3s ease;
         }
         .work-card:hover .card-scrim, .work-card.playing .card-scrim { opacity: 1; }
         .work-card .card-text {
-            position: absolute; left: 0.9rem; bottom: 0.8rem; z-index: 3;
+            position: absolute; left: 0.9rem; bottom: 0.8rem; z-index: 5;
             opacity: 0; transition: opacity 0.3s ease;
         }
         .work-card:hover .card-text, .work-card.playing .card-text { opacity: 1; }
@@ -279,10 +291,9 @@
         </svg>
     </a>
 
-    <!-- Single landing: centered 3x4 project grid with the wordmark in the middle -->
+    <!-- Single landing: centered 3x4 project grid -->
     <main class="stage">
         <div class="work-grid" id="workGrid"></div>
-        <img src="/assets/logos/brand/ionicpost.png" width="1332" height="396" class="hero-wordmark" alt="Ionic Post">
     </main>
 
     <!-- Footer -->
@@ -304,23 +315,25 @@
 
     <script>
     // ===== Projects (Jacob Frost's reel — placeholder until per-client reels land) =====
+    // va = native video aspect ratio (w/h); zoom = scale applied so it fills the
+    // 16:9 tile nicely; fill = blurred footage fills the side bars (square video).
     const PROJECTS = [
-        { client: 'archer money',   title: "here's your f**king money!", vimeo: '1200282915', hash: 'ffeabc1665', thumbnail: 'https://i.vimeocdn.com/video/2167332209-2e6e17f30b93c08b842d27b71c059107ec92ba441d1f37f630c59ddbab7e6362-d_1280x720' },
-        { client: 'onco optima',    title: 'refuse to leave it to chance', vimeo: '1184586128', thumbnail: 'https://i.vimeocdn.com/video/2147773004-bfe04ac45210e7486d3ec60c04f84db2026c53fd35be3f9319ab3f4f770a5d61-d_1280x720' },
-        { client: 'wabi',           title: 'when did we stop playing', vimeo: '1161268499', thumbnail: 'https://i.vimeocdn.com/video/2116569980-827a4c9a901fdcce2c94ba3cec07bb31cda14e49b9fc66e30805132417bf6713-d_1280x720' },
-        { client: 'pocket',         title: 'launch', vimeo: '1170047221', hash: '6ac82c19db', thumbnail: 'https://i.vimeocdn.com/video/2129030620-e34b7e0c8001f6efcbcb482157f38106e4e2d3c1037a7a1a0a6c7c923f294342-d_1280x720' },
-        { client: "arc'teryx",      title: 'a city to summit', vimeo: '1141586908', thumbnail: 'https://i.vimeocdn.com/video/2089031096-1db55212ce8d60b1ffaa49c54beb793e20934cb93e7df1fd0e2ac6ee80619aeb-d_1280x720' },
-        { client: 'pinch',          title: 'a holiday campaign', vimeo: '1140543709', thumbnail: 'https://i.vimeocdn.com/video/2089993227-e000ed9b7ef428ebf6588769ae040780042629649a7118b7c81199783dabe96a-d_1280x720' },
-        { client: 'fare',           title: 'beyond the bowl', vimeo: '1175563835', thumbnail: 'https://i.vimeocdn.com/video/2136430771-f53c21717a7bbd356033553598ee8ab44587fc7bfb1f902567c96ef2ccf98eb5-d_1280x720' },
-        { client: 'world of hyatt', title: 'jess pegula × us open', vimeo: '1149097153', thumbnail: 'https://i.vimeocdn.com/video/2099561094-be2875973c8819d32c4faae7afab7681cb8564188b1271444c1a43dabb5315d5-d_1280x720' },
-        { client: 'aesop',          title: 'skin', vimeo: '1167988129', thumbnail: 'https://i.vimeocdn.com/video/2126179638-f6c354c75518a1be78a136a9d2531222a8d363f2f1dec81d60727825d123bc01-d_1280' },
-        { client: 'ever',           title: 'here to be great', vimeo: '1141278566', thumbnail: 'https://i.vimeocdn.com/video/2099560891-36e638960a316e25a52fbf66821647feab77b29c0a3930becefced787395728d-d_1280' }
+        { client: 'archer money',   title: "here's your f**king money!", vimeo: '1200282915', hash: 'ffeabc1665', va: 1.778, zoom: 1,   thumbnail: 'https://i.vimeocdn.com/video/2167332209-2e6e17f30b93c08b842d27b71c059107ec92ba441d1f37f630c59ddbab7e6362-d_1280x720' },
+        { client: 'onco optima',    title: 'refuse to leave it to chance', vimeo: '1184586128', va: 1.433, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2147773004-bfe04ac45210e7486d3ec60c04f84db2026c53fd35be3f9319ab3f4f770a5d61-d_1280x720' },
+        { client: 'wabi',           title: 'when did we stop playing', vimeo: '1161268499', va: 1.433, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2116569980-827a4c9a901fdcce2c94ba3cec07bb31cda14e49b9fc66e30805132417bf6713-d_1280x720' },
+        { client: 'pocket',         title: 'launch', vimeo: '1170047221', hash: '6ac82c19db', va: 1.778, zoom: 1,   thumbnail: 'https://i.vimeocdn.com/video/2129030620-e34b7e0c8001f6efcbcb482157f38106e4e2d3c1037a7a1a0a6c7c923f294342-d_1280x720' },
+        { client: "arc'teryx",      title: 'a city to summit', vimeo: '1141586908', va: 1.333, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2089031096-1db55212ce8d60b1ffaa49c54beb793e20934cb93e7df1fd0e2ac6ee80619aeb-d_1280x720' },
+        { client: 'pinch',          title: 'a holiday campaign', vimeo: '1140543709', va: 1.433, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2089993227-e000ed9b7ef428ebf6588769ae040780042629649a7118b7c81199783dabe96a-d_1280x720' },
+        { client: 'fare',           title: 'beyond the bowl', vimeo: '1175563835', va: 1.778, zoom: 1,   thumbnail: 'https://i.vimeocdn.com/video/2136430771-f53c21717a7bbd356033553598ee8ab44587fc7bfb1f902567c96ef2ccf98eb5-d_1280x720' },
+        { client: 'world of hyatt', title: 'jess pegula × us open', vimeo: '1149097153', va: 1, zoom: 1, fill: true, thumbnail: 'https://i.vimeocdn.com/video/2099561094-be2875973c8819d32c4faae7afab7681cb8564188b1271444c1a43dabb5315d5-d_1280x720' },
+        { client: 'aesop',          title: 'skin', vimeo: '1167988129', va: 1.5, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2126179638-f6c354c75518a1be78a136a9d2531222a8d363f2f1dec81d60727825d123bc01-d_1280' },
+        { client: 'ever',           title: 'here to be great', vimeo: '1141278566', va: 1.433, zoom: 1.3, thumbnail: 'https://i.vimeocdn.com/video/2099560891-36e638960a316e25a52fbf66821647feab77b29c0a3930becefced787395728d-d_1280' }
     ];
 
     const grid = document.getElementById('workGrid');
-    // Lay 10 projects into a 3x4 frame, leaving the two centre cells (5 & 8) empty
-    // so the wordmark sits in a clean gap. On mobile the spacers are hidden.
-    const SPACER_AT = { 4: true, 7: true };
+    // Lay 10 projects into a 3x4 frame; the two empty cells sit either side of the
+    // bottom tile so the last row reads as a centred capstone. Hidden on mobile.
+    const SPACER_AT = { 9: true, 11: true };
     let pi = 0;
     for (let i = 0; i < 12; i++) {
         if (SPACER_AT[i]) {
@@ -335,6 +348,9 @@
         card.className = 'work-card';
         card.dataset.vimeo = p.vimeo;
         card.dataset.hash = p.hash || '';
+        card.dataset.fill = p.fill ? '1' : '';
+        card.style.setProperty('--va', p.va || 1.778);
+        card.style.setProperty('--zoom', p.zoom || 1);
         card.innerHTML =
             '<img class="card-thumb" src="' + p.thumbnail + '" width="1280" height="720" alt="' + p.client + '" loading="lazy">' +
             '<div class="card-scrim"></div>' +
@@ -348,15 +364,21 @@
     const cards = Array.from(document.querySelectorAll('.work-card'));
     const finePointer = window.matchMedia('(pointer: fine)').matches;
 
-    function loadReel(card) {
-        if (card.querySelector('iframe')) { card.classList.add('playing'); return; }
+    function makeVimeo(card, cls) {
         const v = card.dataset.vimeo, h = card.dataset.hash;
         const iframe = document.createElement('iframe');
+        iframe.className = cls;
         iframe.allow = 'autoplay; fullscreen; picture-in-picture';
         iframe.src = 'https://player.vimeo.com/video/' + v +
             '?' + (h ? 'h=' + h + '&' : '') +
             'badge=0&autopause=0&autoplay=1&loop=1&muted=1&controls=0&background=1&dnt=1&quality=720p';
         card.appendChild(iframe);
+    }
+
+    function loadReel(card) {
+        if (card.querySelector('.card-vid')) { card.classList.add('playing'); return; }
+        if (card.dataset.fill) makeVimeo(card, 'card-fill'); // blurred edge fill behind
+        makeVimeo(card, 'card-vid');
         requestAnimationFrame(function(){ card.classList.add('playing'); });
     }
 
@@ -365,8 +387,7 @@
             card.addEventListener('mouseenter', function() { loadReel(card); });
             card.addEventListener('mouseleave', function() {
                 card.classList.remove('playing');
-                const f = card.querySelector('iframe');
-                if (f) f.remove();
+                card.querySelectorAll('iframe').forEach(function(f){ f.remove(); });
             });
         });
     } else {
