@@ -1569,18 +1569,18 @@ Call us old fashioned, or call us luxury. It's up for interpretation.</p>
             function update() {
                 if (isMobile()) {
                     inner.style.transform = '';
-                    // Mobile flows naturally (no pin) — light each word as it scrolls
-                    // up past ~70% of the viewport. In the final stretch of the page the
-                    // last lines can't scroll that high, so ease the line down toward the
-                    // bottom as we approach it, letting the tail light up fully.
                     const vh = window.innerHeight;
-                    const remaining = document.documentElement.scrollHeight - (window.scrollY + vh);
-                    const boost = Math.max(0, (vh * 0.32) - Math.max(0, remaining));
-                    const line = Math.min(vh * 0.98, vh * 0.7 + boost);
+                    const se = document.scrollingElement || document.documentElement;
+                    const maxScroll = Math.max(1, se.scrollHeight - vh);
+                    // Reveal tied directly to how far down the page you are — robust on
+                    // iOS where the address bar changes the viewport height. A small lead
+                    // plus a fixed bottom guarantee make sure the last lines always finish.
+                    let progress = se.scrollTop / maxScroll + 0.05;
+                    if (se.scrollTop >= maxScroll - 130) progress = 1;
+                    progress = Math.max(0, Math.min(1, progress));
+                    const litCount = Math.ceil(progress * total);
                     for (let i = 0; i < total; i++) {
-                        const lit = words[i].getBoundingClientRect().top < line;
-                        words[i].classList.toggle('lit', lit);
-                        if (!lit) { for (let j = i + 1; j < total; j++) words[j].classList.remove('lit'); break; }
+                        words[i].classList.toggle('lit', i < litCount);
                     }
                     return;
                 }
@@ -1613,6 +1613,10 @@ Call us old fashioned, or call us luxury. It's up for interpretation.</p>
                 measureVisible();
                 update();
             }, { passive: true });
+            // iOS: recompute after momentum settles / the address bar resizes.
+            window.addEventListener('touchend', () => requestAnimationFrame(update), { passive: true });
+            window.addEventListener('scrollend', update, { passive: true });
+            if (window.visualViewport) window.visualViewport.addEventListener('resize', update, { passive: true });
         })();
 
         // ==================== //
