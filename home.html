@@ -169,7 +169,7 @@
             transform: translate(-50%, -50%) scale(1.18);
             border: 0; z-index: 2; pointer-events: none;
             filter: blur(22px) brightness(0.82);
-            opacity: 0; transition: opacity 0.6s ease;
+            opacity: 0; /* instant reveal on hover — no fade */
         }
         /* Main player — sized to the video's native aspect so it isn't over-cropped,
            then scaled by --zoom to fill the 16:9 tile (square videos stay letterboxed). */
@@ -178,7 +178,7 @@
             height: 100%; width: calc(var(--va, 1.778) * 56.25%);
             transform: translate(-50%, -50%) scale(var(--zoom, 1));
             border: 0; z-index: 3;
-            opacity: 0; transition: opacity 0.6s ease;
+            opacity: 0; /* instant reveal on hover — no fade */
             pointer-events: none; /* let the custom cursor keep tracking over the player */
         }
         .work-card.playing .card-vid, .work-card.playing .card-fill { opacity: 1; }
@@ -257,7 +257,7 @@
         body.dark-mode .menu-overlay.active { background: rgba(26,26,46,0.4); }
     </style>
 </head>
-<body>
+<body><script>try{if(localStorage.getItem("darkMode")!=="false")document.body.classList.add("dark-mode");}catch(e){}</script>
     <div class="cursor" id="cursor"></div>
 
     <!-- Nav -->
@@ -371,30 +371,29 @@
         iframe.allow = 'autoplay; fullscreen; picture-in-picture';
         iframe.src = 'https://player.vimeo.com/video/' + v +
             '?' + (h ? 'h=' + h + '&' : '') +
-            'badge=0&autopause=0&autoplay=1&loop=1&muted=1&controls=0&background=1&dnt=1&quality=720p';
+            'badge=0&autopause=0&autoplay=1&loop=1&muted=1&controls=0&background=1&dnt=1&quality=540p';
         card.appendChild(iframe);
     }
 
-    function loadReel(card) {
-        if (card.querySelector('.card-vid')) { card.classList.add('playing'); return; }
+    // Preload every reel up front (each card already has its player buffering and
+    // looping behind the poster) so hovering reveals it instantly — no load, no fade.
+    function buildReel(card) {
+        if (card.querySelector('.card-vid')) return;
         if (card.dataset.fill) makeVimeo(card, 'card-fill'); // blurred edge fill behind
         makeVimeo(card, 'card-vid');
-        requestAnimationFrame(function(){ card.classList.add('playing'); });
     }
 
     if (finePointer) {
         cards.forEach(function(card) {
-            card.addEventListener('mouseenter', function() { loadReel(card); });
-            card.addEventListener('mouseleave', function() {
-                card.classList.remove('playing');
-                card.querySelectorAll('iframe').forEach(function(f){ f.remove(); });
-            });
+            buildReel(card);
+            card.addEventListener('mouseenter', function() { card.classList.add('playing'); });
+            card.addEventListener('mouseleave', function() { card.classList.remove('playing'); });
         });
     } else {
-        // Touch devices: autoplay the reel for whichever card is in view.
+        // Touch devices: build + reveal the reel for whichever card is in view.
         const io = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
-                if (entry.isIntersecting) loadReel(entry.target);
+                if (entry.isIntersecting) { buildReel(entry.target); entry.target.classList.add('playing'); }
             });
         }, { threshold: 0.5 });
         cards.forEach(function(c) { io.observe(c); });
@@ -429,7 +428,7 @@
     // ===== Dark mode =====
     (function() {
         const toggle = document.getElementById('darkModeToggle');
-        if (localStorage.getItem('darkMode') === 'true') { document.body.classList.add('dark-mode'); toggle.checked = true; }
+        if (localStorage.getItem('darkMode') !== 'false') { document.body.classList.add('dark-mode'); toggle.checked = true; }
         toggle.addEventListener('change', function() {
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
