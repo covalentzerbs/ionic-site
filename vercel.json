@@ -12,7 +12,8 @@
     { "source": "/directors/:slug", "destination": "/editors/:slug", "permanent": true },
     { "source": "/editors/jacob-frost", "destination": "/editors/jacob", "permanent": true },
     { "source": "/editors/jude-gabriel-nelson", "destination": "/editors/jude", "permanent": true },
-    { "source": "/editors/bella-latenser", "destination": "/editors/bella", "permanent": true }
+    { "source": "/editors/bella-latenser", "destination": "/editors/bella", "permanent": true },
+    { "source": "/editors/joey-doyle", "destination": "/editors/joey", "permanent": true }
   ],
   "headers": [
     {

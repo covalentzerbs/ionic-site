@@ -796,6 +796,9 @@
                 <div class="director-row" data-director="bella" data-vimeo="1194480262">
                     <span class="director-name">Bella Latenser</span>
                 </div>
+                <div class="director-row" data-director="joey" data-vimeo="1208487027">
+                    <span class="director-name">Joey Doyle</span>
+                </div>
             </div>
         </div>
     </main>
@@ -841,7 +844,8 @@
         const directors = [
             { id: 'jacob',    slug: 'jacob-frost',          name: 'Jacob Frost',         vimeo: '1170741864', zoom: 'slight',    thumbnail: 'https://i.vimeocdn.com/video/2129989125-7bcea3f611dc90b29683cb79b07503543d01abd6db34091368cc53005941e0e5-d_1280x720' },
             { id: 'jude',     slug: 'jude-gabriel-nelson',  name: 'Jude Gabriel Nelson', vimeo: '1205656125', thumbnail: 'https://i.vimeocdn.com/video/2174299129-d1d679767ddd2f9680146440e930784ffd0c3404851d06e85c767085329876b5-d_1280x720' },
-            { id: 'bella',    slug: 'bella-latenser',       name: 'Bella Latenser',      vimeo: '1194480262', thumbnail: 'https://i.vimeocdn.com/video/2160142585-915e5a834ef46a2237b6973ef5947e3c9218f2348b1d435e3fd36142ecd6430b-d_1280x720' }
+            { id: 'bella',    slug: 'bella-latenser',       name: 'Bella Latenser',      vimeo: '1194480262', thumbnail: 'https://i.vimeocdn.com/video/2160142585-915e5a834ef46a2237b6973ef5947e3c9218f2348b1d435e3fd36142ecd6430b-d_1280x720' },
+            { id: 'joey',     slug: 'joey-doyle',           name: 'Joey Doyle',          vimeo: '1208487027', hash: '78f938d90b', thumbnail: 'https://i.vimeocdn.com/video/2177824090-289b09987447534669508ba11f37b2b3407666942542f2689aecb3e58f114e87-d_1280x720' }
         ];
 
         const videoWrapper = document.getElementById('videoWrapper');
@@ -868,7 +872,7 @@
             iframe.setAttribute('loading', 'eager');
 
             if (director.vimeo) {
-                iframe.src = `https://player.vimeo.com/video/${director.vimeo}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&controls=0&background=1&dnt=1`;
+                iframe.src = `https://player.vimeo.com/video/${director.vimeo}?${director.hash ? 'h=' + director.hash + '&' : ''}badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&controls=0&background=1&dnt=1`;
             } else if (director.youtube) {
                 iframe.src = `https://www.youtube.com/embed/${director.youtube}?autoplay=1&loop=1&muted=1&controls=0&showinfo=0&rel=0&modestbranding=1&playlist=${director.youtube}&playsinline=1`;
             }
